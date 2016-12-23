@@ -1,0 +1,87 @@
+name:                nix-channelstatus
+version:             0.1.0.0
+synopsis:            NixOS/Nixpkgs channel information
+description:         Please see README.md
+homepage:            https://github.com/Enlambda/nix-channelstatus
+license:             BSD3
+license-file:        LICENSE
+author:              Domen Kožar
+maintainer:          domen@enlambda.co
+copyright:           2016 Domen Kožar
+category:            Web
+build-type:          Simple
+-- extra-source-files:
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     ChannelStatus.IndexFiles
+                       ChannelStatus.JSON
+                       ChannelStatus.Server
+                       ChannelStatus.API
+                       ChannelStatus.Query
+                       ChannelStatus.Database
+  build-depends:       base >= 4.7 && < 5
+                     , http-conduit
+                     , lzma-conduit
+                     , conduit-extra
+                     , conduit
+                     , text
+                     , bytestring
+                     , parallel-io
+                     , aeson
+                     , unordered-containers
+                     , resourcet
+                     , servant-server
+                     , opaleye
+                     , product-profunctors
+                     , scientific
+                     , time
+                     , uuid
+                     , profunctors
+                     , postgresql-simple
+                     , resource-pool
+                     , transformers
+  default-language:    Haskell2010
+  ghc-options: -Wall
+
+executable serve-channelstatus
+  hs-source-dirs:      serve-channelstatus
+  main-is:             Main.hs
+  ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , wai
+                     , warp
+                     , servant-server
+                     , text
+                     , nix-channelstatus
+                     , postgresql-simple
+                     , resource-pool
+  default-language:    Haskell2010
+
+executable index-nix-channels
+  hs-source-dirs:      index-channels
+  main-is:             Main.hs
+  ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , text
+                     , nix-channelstatus
+  default-language:    Haskell2010
+
+test-suite test-nix-channelstatus
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       base
+                     , hspec
+                     , aeson
+                     , raw-strings-qq
+                     , bytestring
+                     , nix-channelstatus
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  other-modules: JSONSpec
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/Enlambda/nix-channelstatus
