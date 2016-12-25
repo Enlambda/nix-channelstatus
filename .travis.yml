@@ -1,14 +1,15 @@
 sudo: true
 language: nix
 env:
-  - NIX_PATH=nixpkgs=https://github.com/NixOS/nixpkgs/archive/e18dac705ad36482880e23d0a89c60c3514cb446.tar.gz
+  - NIX_PATH=nixpkgs=https://github.com/NixOS/nixpkgs/archive/f52eaf4fb371112f7a5b28d71f97de71709002a0.tar.gz
 cache:
   directories:
   - "$HOME/.stack"
   - "$HOME/build/Enlambda/nix-channelstatus/.stack-work"
 
 before_install:
-- nix-shell -p stack --run "stack build --nix --only-dependencies --fast"
+- sudo mount -o remount,exec,size=4G,mode=755 /run/user || true
+- nix-shell -p stack --run "stack build --nix --only-dependencies"
 
 script:
 - nix-shell -p stack --run "stack build --nix --test"
