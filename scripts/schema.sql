@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS StorePathContents (
   isExecutable BOOLEAN NOT NULL,
   fileSize INTEGER,
   target TEXT,
-  PRIMARY KEY (storePath, subPath),
+  PRIMARY KEY (storePath, subPath, file),
   FOREIGN KEY (storePath) REFERENCES StorePaths(id) ON DELETE CASCADE
 );
 

@@ -52,7 +52,7 @@ dirToPG (Directory lst) fp sp = concatMap f lst
 dirToPG (FilePath file (File size isexecutable)) fp sp =
   [Storepathcontent
     { storepathcontentStorepath = pgInt4 $ fromIntegral sp
-    , storepathcontentSubpath = pgStrictText $ intercalate "/" fp
+    , storepathcontentSubpath = pgStrictText $ intercalate "/" (init fp)
     , storepathcontentFile = pgStrictText file
     , storepathcontentType = pgInt4 $ typeToInt "regular"
     , storepathcontentIsexecutable = pgBool $ toBool isexecutable
@@ -62,7 +62,7 @@ dirToPG (FilePath file (File size isexecutable)) fp sp =
 dirToPG (Symlink file target) fp sp =
   [Storepathcontent
     { storepathcontentStorepath = pgInt4 $ fromIntegral sp
-    , storepathcontentSubpath = pgStrictText $ intercalate "/" fp
+    , storepathcontentSubpath = pgStrictText $ intercalate "/" (init fp)
     , storepathcontentFile = pgStrictText $ file
     , storepathcontentType = pgInt4 $ typeToInt "symlink"
     , storepathcontentIsexecutable = pgBool False
@@ -70,6 +70,7 @@ dirToPG (Symlink file target) fp sp =
     , storepathcontentTarget = Just $ toNullable $ pgStrictText target
     }]
 
+-- TODO: refactor these
 
 typeToInt :: String -> Int
 typeToInt "regular" = 0
