@@ -6,8 +6,9 @@ module ChannelStatus.Query where
 
 import           Control.Arrow (returnA)
 import qualified Data.ByteString.Char8 as BS
+import           Data.Monoid ((<>))
 import           Data.Text (Text, intercalate)
-import           Data.Maybe (listToMaybe)
+import           Data.Maybe (listToMaybe, fromMaybe, maybe)
 import qualified Database.PostgreSQL.Simple as PG
 import           GHC.Int
 import           Opaleye
@@ -16,16 +17,19 @@ import           ChannelStatus.Database
 import           ChannelStatus.JSON
 
 
--- TODO: refactor queries to include returning types (using runQuery)
+-- Storepath
 
 storepathQuery :: Query StorepathReadColumns
 storepathQuery = queryTable storepathTable
 
-existsStorePath :: BS.ByteString -> Query (Column PGText)
-existsStorePath path = proc () -> do
+existsStorePathQuery :: BS.ByteString -> Query (Column PGText)
+existsStorePathQuery path = proc () -> do
     Storepath{..} <- storepathQuery -< ()
     restrict -< storepathPath .== pgString (BS.unpack path)
     returnA -< storepathPath
+
+existsStorePath :: PG.Connection -> BS.ByteString -> IO [Text]
+existsStorePath conn path = runQuery conn $ existsStorePathQuery path
 
 insertStorepath :: PG.Connection -> BS.ByteString -> IO (Maybe Int32)
 insertStorepath conn path =
@@ -36,12 +40,35 @@ insertStorepath conn path =
         , storepathPath = pgString $ BS.unpack path
         }
 
+-- Storepathcontents
+
+storepathcontentsQuery :: Query StorepathcontentReadColumns
+storepathcontentsQuery = queryTable storepathcontentTable
+
 insertStorepathcontents :: PG.Connection -> Directory -> Int32 -> IO Int64
 insertStorepathcontents conn dir sp =
   runInsertMany conn storepathcontentTable $ dirToPG dir [] sp
 
-searchFileQuery :: PG.Connection -> Maybe String -> [File]
-searchFileQuery conn s = undefined
+spcQuery :: Maybe Text -> Query StorepathcontentReadColumns
+spcQuery q = proc () -> do
+  row@Storepathcontent{..} <- storepathcontentsQuery -< ()
+  restrict -< like storepathcontentFile $ pgStrictText $ fromMaybe "" q
+  restrict -< in_ ["bin", "sbin"] storepathcontentSubpath
+  returnA -< row
+
+searchBinariesQuery :: Maybe Text -> Query (StorepathcontentReadColumns, StorepathReadColumns)
+searchBinariesQuery q = proc () -> do
+  sp@Storepath{..} <- storepathQuery -< ()
+  spc@Storepathcontent{..} <- (spcQuery q) -< ()
+  -- TODO: limit
+  restrict -< storepathcontentStorepath .== storepathId
+  returnA -< (spc, sp)
+
+
+searchBinaries :: PG.Connection -> Maybe Text -> IO [(Storepathcontent, Storepath)]
+searchBinaries conn s =
+  runQuery conn $ searchBinariesQuery s
+
 
 -- Helpers
 

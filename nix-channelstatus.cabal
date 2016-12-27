@@ -21,6 +21,7 @@ library
                        ChannelStatus.API
                        ChannelStatus.Query
                        ChannelStatus.Database
+                       ChannelStatus.DatabaseExtra
   build-depends:       base >= 4.7 && < 5
                      , http-conduit
                      , lzma-conduit

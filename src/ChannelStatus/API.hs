@@ -9,9 +9,10 @@ import Data.Text
 import GHC.Generics
 import Servant
 
+import ChannelStatus.Database
 
 type ChannelsAPI = "channel" :>
-  ( "files" :> QueryParam "q" String :> Get '[JSON] [File]
+  ( "files" :> QueryParam "q" Text :> Get '[JSON] [(Storepathcontent, Storepath)]
   :<|> Get '[JSON] [Channel]
   )
 

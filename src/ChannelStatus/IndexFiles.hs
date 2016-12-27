@@ -48,7 +48,7 @@ retrieveXZ manager url =
 transform :: Manager -> BS.ByteString -> IO ()
 transform manager path = do
   conn <- PG.connectPostgreSQL "postgresql:///channelstatus"
-  paths <- (runQuery conn $ existsStorePath path :: IO [Text])
+  paths <- existsStorePath conn path
   when (paths == []) $ PG.withTransaction conn $ do
     -- Index since path is not known yet
     storepathId <- insertStorepath conn path

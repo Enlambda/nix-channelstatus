@@ -1,20 +1,25 @@
 {-# LANGUAGE TypeOperators   #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module ChannelStatus.Server where
 
 import Control.Monad.Trans.Except (ExceptT)
 import Control.Monad.Trans.Reader (ReaderT, ask, runReaderT)
+import Control.Monad.IO.Class (liftIO)
 import Servant
 import Data.Pool (Pool, withResource)
+import Data.Text
 import Database.PostgreSQL.Simple hiding (Query)
 
 import ChannelStatus.API
+import ChannelStatus.DatabaseExtra
 import ChannelStatus.Query
 
 
-filesapi :: Maybe String -> AppM [File]
-filesapi Nothing = return files
-filesapi (Just _) = return files
+filesapi :: Maybe Text -> AppM [(Storepathcontent, Storepath)]
+filesapi q = do
+  conn <- getConn
+  liftIO $ searchBinaries conn q
 
 channelapi :: AppM [Channel]
 channelapi = return [Channel "foo", Channel "bar"]
@@ -25,14 +30,6 @@ server = filesapi
 
 channelsAPI :: Proxy API
 channelsAPI = Proxy
-
-
-files :: [File]
-files =
-    [ File "foo" 3
-    , File "bar" 10
-    ]
-
 
 type AppM = ReaderT (Pool Connection) (ExceptT ServantErr IO)
 
