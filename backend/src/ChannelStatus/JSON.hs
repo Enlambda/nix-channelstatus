@@ -20,7 +20,6 @@ type Size = Word64
 data IsExecutable = NotExecutable | Executable deriving (Show, Eq)
 data File = File Size IsExecutable deriving (Show, Eq)
 
-type Type = Text
 type Target = Text
 type Path = Text
 

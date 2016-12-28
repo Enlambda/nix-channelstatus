@@ -6,9 +6,8 @@ module ChannelStatus.Query where
 
 import           Control.Arrow (returnA)
 import qualified Data.ByteString.Char8 as BS
-import           Data.Monoid ((<>))
 import           Data.Text (Text, intercalate)
-import           Data.Maybe (listToMaybe, fromMaybe, maybe)
+import           Data.Maybe (listToMaybe, fromMaybe)
 import qualified Database.PostgreSQL.Simple as PG
 import           GHC.Int
 import           Opaleye
@@ -102,6 +101,7 @@ dirToPG (Symlink file target) fp sp =
 typeToInt :: String -> Int
 typeToInt "regular" = 0
 typeToInt "symlink" = 1
+typeToInt _ = 2
 
 toBool :: IsExecutable -> Bool
 toBool Executable = True

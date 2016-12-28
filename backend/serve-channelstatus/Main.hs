@@ -3,15 +3,13 @@
 module Main where
 
 import Data.Text
-import Data.Pool (Pool, createPool)
+import Data.Pool (createPool)
 import Data.Monoid ((<>))
 import qualified Data.Text.IO as T
-import Network.Wai
 import Network.Wai.Handler.Warp
 import qualified Database.PostgreSQL.Simple as PG
 
 import ChannelStatus.Server
-import ChannelStatus.API
 
 
 main :: IO ()

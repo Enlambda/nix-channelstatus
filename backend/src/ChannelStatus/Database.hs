@@ -57,6 +57,7 @@ data Storepathcontent' c1 c2 c3 c4 c5 c6 c7 =
     , storepathcontentTarget :: c7
     } deriving (Generic)
 
+
 type Storepathcontent = Storepathcontent' Int32 Text Text Int32 Bool (Maybe Int32) (Maybe Text)
 
 type StorepathcontentReadColumns = Storepathcontent' (Column PGInt4) (Column PGText) (Column PGText) (Column PGInt4) (Column PGBool) (Column (Nullable PGInt4)) (Column (Nullable PGText))

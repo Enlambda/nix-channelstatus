@@ -16,13 +16,11 @@ import Data.Conduit.List (consume)
 import Data.Maybe (catMaybes)
 import Data.Either ()
 import Data.Monoid ((<>))
-import Data.Text (Text)
 import           GHC.Int
 import qualified Database.PostgreSQL.Simple as PG
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import qualified Data.ByteString.Char8 as BS
 import Network.HTTP.Conduit
-import Opaleye
 import qualified Data.Conduit as C
 import Control.Monad.Trans.Resource (runResourceT)
 
@@ -61,7 +59,7 @@ indexStorePath _ path _ (Left msg) =
   print $ "Error during parsing of " <> BS.unpack path <> " : " <> msg
 indexStorePath _ path Nothing (Right dir) =
   print $ "No storepathID for " <> BS.unpack path
-indexStorePath conn path (Just storepathId) (Right dir) =
+indexStorePath conn _ (Just storepathId) (Right dir) =
   void $ insertStorepathcontents conn dir storepathId
 
 

@@ -4,9 +4,8 @@ synopsis:            NixOS/Nixpkgs channel information
 description:         Please see README.md
 homepage:            https://github.com/Enlambda/nix-channelstatus
 license:             BSD3
-license-file:        LICENSE
 author:              Domen Kožar
-maintainer:          domen@enlambda.co
+maintainer:          domen@enlambda.com
 copyright:           2016 Domen Kožar
 category:            Web
 build-type:          Simple
