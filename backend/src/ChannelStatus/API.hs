@@ -13,7 +13,7 @@ import ChannelStatus.Database
 
 type ChannelsAPI = "channel" :>
   ( "files" :> QueryParam "q" Text :> Get '[JSON] [(Storepathcontent, Storepath)]
-  :<|> Get '[JSON] [Channel]
+-- :<|> Get '[JSON] [Channel]
   )
 
 data File = File {

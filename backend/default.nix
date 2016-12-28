@@ -1,6 +1,7 @@
 { pkgs ? (import ./../pkgs.nix) {} }:
 
 let
+  hLib = import <nixpkgs/pkgs/development/haskell-modules/lib.nix> { inherit pkgs; };
   haskellPackages = pkgs.haskell.packages.ghc801.override{
     overrides =
       let overrideAttrs = package: newAttrs: package.override (args: args // {
@@ -17,6 +18,14 @@ let
               }
             )
           ) {};
+
+          # https://github.com/krisajenkins/elm-export/pull/22
+          elm-export = overrideAttrs super.elm-export {
+            jailbreak = true;
+          };
+          servant-elm = overrideAttrs super.servant-elm {
+            doCheck = false;
+          };
 
           #
           #

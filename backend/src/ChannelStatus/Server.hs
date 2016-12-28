@@ -26,7 +26,7 @@ channelapi = return [Channel "foo", Channel "bar"]
 
 server :: ServerT API AppM
 server = filesapi
-    :<|> channelapi
+--  :<|> channelapi
 
 channelsAPI :: Proxy API
 channelsAPI = Proxy
