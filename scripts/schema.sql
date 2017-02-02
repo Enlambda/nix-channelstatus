@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS StorePathContents (
   FOREIGN KEY (storePath) REFERENCES StorePaths(id) ON DELETE CASCADE
 );
 
+CREATE INDEX file_idx_storepathcontents ON StorePathContents (file);
+CREATE INDEX subpath_idx_storepathcontents ON StorePathContents (subPath);
 
 -- TODO: M2M for channels
 -- TODO: eval nixpkgs, add system and attribute

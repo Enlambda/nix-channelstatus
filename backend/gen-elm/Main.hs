@@ -28,8 +28,10 @@ elmoptions :: Options
 elmoptions = Options {fieldLabelModifier = replace "'" ""}
 
 spec :: ElmOptions -> Spec
-spec elmexportoptions = Spec ["ChannelStatus"]
+spec elmexportoptions = Spec ["API"]
             (defElmImports
+              : toElmTypeSourceWith elmoptions         (Proxy :: Proxy Storepath)
+              : toElmDecoderSourceWith elmoptions      (Proxy :: Proxy Storepath)
               : toElmTypeSourceWith elmoptions         (Proxy :: Proxy Storepathcontent)
               : toElmDecoderSourceWith elmoptions      (Proxy :: Proxy Storepathcontent)
               : generateElmForAPIWith elmexportoptions (Proxy :: Proxy API)
@@ -52,6 +54,6 @@ main = do
     (fullDesc <> progDesc "Generate types for Elm frontend")
   let elmexportoptions = defElmOptions {
         elmExportOptions = elmoptions
-      , urlPrefix = pack (elmbackendurl elmconfig)
+      , urlPrefix = Dynamic
       }
   specsToDir [spec elmexportoptions] $ elmpath elmconfig

@@ -1,1 +1,4 @@
 .stack-work
+elm-stuff
+node_modules
+API.elm

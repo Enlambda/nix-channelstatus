@@ -58,6 +58,7 @@ executable serve-channelstatus
                      , nix-channelstatus
                      , postgresql-simple
                      , resource-pool
+                     , wai-cors
   default-language:    Haskell2010
 
 executable index-nix-channels

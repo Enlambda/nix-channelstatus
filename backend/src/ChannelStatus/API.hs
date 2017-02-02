@@ -12,6 +12,7 @@ import Servant
 import ChannelStatus.Database
 
 type ChannelsAPI = "channel" :>
+-- TODO: the tuple needs to become a record
   ( "files" :> QueryParam "q" Text :> Get '[JSON] [(Storepathcontent, Storepath)]
 -- :<|> Get '[JSON] [Channel]
   )

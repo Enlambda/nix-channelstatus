@@ -9,7 +9,9 @@ cache:
 
 before_install:
 - sudo mount -o remount,exec,size=4G,mode=755 /run/user || true
-- nix-shell -p stack --run "stack build --nix --only-dependencies"
+- pushd frontend
+- nix-shell --run "npm i && elm package install -y" -j 8
+- popd
 
 script:
-- nix-shell -p stack --run "stack build --nix --test"
+- nix-build

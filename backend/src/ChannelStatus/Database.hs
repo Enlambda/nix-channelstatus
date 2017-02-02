@@ -2,11 +2,12 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 
 module ChannelStatus.Database where
 
-import qualified Data.Aeson                 as JSON
+import           Data.Aeson (ToJSON)
 import           Data.Profunctor
 import           Data.Profunctor.Product
 import           Data.Profunctor.Product.Default
@@ -17,6 +18,7 @@ import           Data.Time
 import           Data.UUID
 import           GHC.Int
 import           GHC.Generics
+import           Servant.Elm
 import           Opaleye hiding (fromNullable)
 
 -- | A newtype around @a -> Maybe b@ to facilitate conversions from the
@@ -55,7 +57,7 @@ data Storepathcontent' c1 c2 c3 c4 c5 c6 c7 =
     , storepathcontentIsexecutable :: c5
     , storepathcontentFilesize :: c6
     , storepathcontentTarget :: c7
-    } deriving (Generic)
+    } deriving (Generic, ToJSON, ElmType)
 
 
 type Storepathcontent = Storepathcontent' Int32 Text Text Int32 Bool (Maybe Int32) (Maybe Text)
@@ -92,7 +94,7 @@ data Storepath' c1 c2 =
   Storepath
     { storepathId :: c1
     , storepathPath :: c2
-    } deriving Generic
+    } deriving (Generic, ToJSON, ElmType)
 
 type Storepath = Storepath' Int32 Text
 
